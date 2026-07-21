@@ -1,0 +1,81 @@
+:root {
+    --bg-dark: #121212;
+    --card-dark: #1e1e1e;
+    --primary-red: #D32F2F;
+    --fire-orange: #FF5722;
+    --text-light: #F5F5F5;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #000000 !important;
+    border-bottom: 3px solid var(--primary-red);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    color: var(--fire-orange) !important;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
+                radial-gradient(circle, rgba(211,47,47,0.4) 0%, rgba(0,0,0,1) 80%);
+    padding: 80px 0;
+    border-bottom: 2px solid var(--fire-orange);
+}
+
+/* Card Produk */
+.card-product {
+    background-color: var(--card-dark);
+    border: 1px solid #333;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 87, 34, 0.3);
+    border-color: var(--fire-orange);
+}
+
+.card-product img {
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Buttons */
+.btn-hot {
+    background: linear-gradient(45deg, var(--primary-red), var(--fire-orange));
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-hot:hover {
+    background: linear-gradient(45deg, var(--fire-orange), var(--primary-red));
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 61, 0, 0.6);
+}
+
+/* Form Input Custom */
+.form-control, .form-select {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #333;
+    border-color: var(--fire-orange);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(255, 87, 34, 0.5);
+}

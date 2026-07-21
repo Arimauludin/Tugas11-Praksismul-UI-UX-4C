@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-clock-rotate-left text-danger me-2"></i>Riwayat Pemesanan</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle border border-secondary">
+            <thead>
+                <tr class="table-danger text-dark">
+                    <th>ID Pesanan</th>
+                    <th>Nama Pemesan</th>
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Total Harga</th>
+                    <th>Estimasi</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><strong>{{ order.id }}</strong></td>
+                    <td>{{ order.nama }}</td>
+                    <td>{{ order.produk }}</td>
+                    <td>{{ order.jumlah }}</td>
+                    <td class="text-danger fw-bold">Rp {{ "{:,}".format(order.total) }}</td>
+                    <td><span class="badge bg-secondary">{{ order.estimasi }}</span></td>
+                    <td>
+                        <span class="badge {% if 'Return' in order.status %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if order.can_return %}
+                        <form action="{{ url_for('return_order', order_id=order.id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengajukan return untuk pesanan ini?');">
+                            <button type="submit" class="btn btn-outline-warning btn-sm">
+                                <i class="fa-solid fa-rotate-left me-1"></i> Ajukan Return
+                            </button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>Return Diproses</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

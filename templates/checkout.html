@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-white border-danger shadow-lg p-3">
+                <div class="card-body">
+                    <h2 class="card-title text-center fw-bold mb-4" style="color: var(--fire-orange);">
+                        <i class="fa-solid fa-cash-register me-2"></i>Form Pemesanan AriMa-crunch
+                    </h2>
+
+                    <form action="{{ url_for('checkout') }}" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="nama" name="nama" placeholder="Contoh: Budi Santoso" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telepon" class="form-label">No. WhatsApp / HP</label>
+                            <input type="tel" class="form-control" id="telepon" name="telepon" placeholder="08123456789" pattern="[0-9]{10,13}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="produk_id" class="form-label">Pilih Produk</label>
+                            <select class="form-select" id="produk_id" name="produk_id" onchange="calculateTotal()" required>
+                                <option value="" selected disabled data-price="0">-- Pilih Varian AriMa-crunch --</option>
+                                {% for product in products %}
+                                    <option value="{{ product.id }}" data-price="{{ product.price }}">{{ product.name }} - Rp {{ "{:,}".format(product.price) }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jumlah" class="form-label">Jumlah Porsi</label>
+                                <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" max="50" value="1" onchange="calculateTotal()" onkeyup="calculateTotal()" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Estimasi Pengiriman</label>
+                                <input type="text" class="form-control text-warning fw-bold" value="2-3 Hari Kerja" readonly>
+                            </div>
+                        </div>
+
+                        <div class="p-3 mb-3 bg-secondary bg-opacity-20 rounded border border-secondary">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fs-5">Total Bayar:</span>
+                                <span class="fs-3 fw-bold text-danger" id="total_bayar">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat Pengiriman</label>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Jl. Merdeka No. 12" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-hot btn-lg w-100 mt-2">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Kirim Pesanan Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if success_order %}
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-danger">
+      <div class="modal-header border-bottom border-danger">
+        <h5 class="modal-title fw-bold text-danger"><i class="fa-solid fa-circle-check me-2"></i>Pesanan Berhasil!</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">Terima kasih <strong>{{ success_order.nama }}</strong>, pesananmu sedang diproses!</p>
+        <ul class="list-group list-group-flush rounded text-dark mb-3">
+            <li class="list-group-item"><strong>ID Pesanan:</strong> {{ success_order.id }}</li>
+            <li class="list-group-item"><strong>Produk:</strong> {{ success_order.produk }} (x{{ success_order.jumlah }})</li>
+            <li class="list-group-item"><strong>Total Bayar:</strong> <span class="text-danger fw-bold">Rp {{ "{:,}".format(success_order.total) }}</span></li>
+            <li class="list-group-item"><strong>Estimasi Tiba:</strong> {{ success_order.estimasi }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer border-top border-secondary">
+        <a href="{{ url_for('history') }}" class="btn btn-hot w-100">Lihat Riwayat Pesanan</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Fungsi Hitung Total Harga Otomatis
+function calculateTotal() {
+    var select = document.getElementById('produk_id');
+    var selectedOption = select.options[select.selectedIndex];
+    var price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+    var qty = parseInt(document.getElementById('jumlah').value) || 0;
+    
+    var total = price * qty;
+    document.getElementById('total_bayar').innerText = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+// Buka Modal Pop-up jika pesanan berhasil disubmit
+{% if success_order %}
+var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+myModal.show();
+{% endif %}
+</script>
+{% endblock %}

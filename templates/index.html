@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center text-white">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-3" style="color: var(--fire-orange);">ARIMA-CRUNCH 🔥</h1>
+        <p class="lead mb-4 text-light">Makroni renyah bertabur bumbu cabai asli & rempah pilihan. Berani coba level terpedas?</p>
+        <a href="{{ url_for('products') }}" class="btn btn-hot btn-lg px-4 me-2">Lihat Menu <i class="fa-solid fa-arrow-right ms-1"></i></a>
+    </div>
+</section>
+
+<!-- Preview Produk -->
+<section class="container py-5">
+    <h2 class="text-center mb-4 text-white fw-bold"><i class="fa-solid fa-pepper-hot text-danger me-2"></i>Produk Terlaris</h2>
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-md-4">
+            <div class="card card-product h-100 text-white">
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                    <p class="card-text text-secondary flex-grow-1">{{ product.desc }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="fs-5 fw-bold text-danger">Rp {{ "{:,}".format(product.price) }}</span>
+                        <a href="{{ url_for('checkout') }}" class="btn btn-hot btn-sm">Beli Sekarang</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
